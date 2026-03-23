@@ -29,14 +29,7 @@ const int PADDLE_WIDTH = 20;
 const int PADDLE_WALL_OFFSET = 20;
 
 int Get_Direction_Input();
-
-void Get_Ball_Direction(uint32_t *pixels, int *ball_position_offset) {
-    
-    int x_offset = 0;
-    int y_offset = 0;
-
-    return;
-}
+int Get_AI_Input(struct ball_position ball_pos, struct paddle *paddle_ai);
 
 int main() {
 
@@ -127,6 +120,10 @@ int main() {
             ball_x_direction = -2;
         }
 
+        if (ball_pos.x <= 0 || ball_pos.x >= SCREEN_WIDTH) {
+
+        }
+
         // Move the balls x position based on direction variable
         ball_pos.x += ball_x_direction;
 
@@ -162,5 +159,15 @@ int Get_Direction_Input() {
     return direction;
 }
 
+int Get_AI_Input(struct ball_position ball_pos, struct paddle *paddle_ai) {
+    
+    int direction = 0;
+
+    if (ball_pos.y < (paddle_ai->center_position - PADDLE_HEIGHT)) {
+
+    }
+
+    return direction;
+}
 
 
