@@ -24,11 +24,12 @@ struct paddle {
 };
 
 // PADDLE Variables
-const int PADDLE_HEIGHT = 80;
+const int PADDLE_HEIGHT = 100;
 const int PADDLE_WIDTH = 20;
 const int PADDLE_WALL_OFFSET = 20;
 
 int Get_Direction_Input();
+int Get_Ball_Y_Direction(struct ball_position ball_pos, struct paddle paddle);
 int Get_AI_Input(struct ball_position ball_pos, struct paddle *paddle_ai);
 
 int main() {
@@ -53,7 +54,8 @@ int main() {
 
     // Ball initializations
     struct ball_position ball_pos = {SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2};
-    int ball_x_direction = -1;
+    int ball_x_direction = -1; // Start towards player
+    int ball_y_direction = 0; // Make ball straight on start
 
     // Paddle initializations
     struct paddle paddle_player = {SCREEN_HEIGHT / 2};
@@ -112,20 +114,37 @@ int main() {
  
         // Ball bounce off player paddle logic
         if (ball_pos.x <= PADDLE_WALL_OFFSET + PADDLE_WIDTH && (ball_pos.y > paddle_player.center_position - PADDLE_HEIGHT && ball_pos.y < paddle_player.center_position + PADDLE_HEIGHT)) {
+            
+            if (ball_pos.y < paddle_player.center_position - 20) {
+                ball_y_direction = -1;
+            } else if (ball_pos.y > paddle_player.center_position + 20) {
+                ball_y_direction = 1;
+            } else {
+                ball_y_direction = 0;
+            }
+
+
             ball_x_direction = 1;
         }
 
         // Ball bounce off ai paddle
         if (ball_pos.x >= SCREEN_WIDTH - PADDLE_WALL_OFFSET - PADDLE_WIDTH && (ball_pos.y > (paddle_ai.center_position - PADDLE_HEIGHT && ball_pos.y < paddle_ai.center_position + PADDLE_HEIGHT))) {
-            ball_x_direction = -2;
+            ball_x_direction = -1;
+        }
+        
+        // Ball bounce off top and bottom of screen
+        if (ball_pos.y >= SCREEN_HEIGHT - 2 || ball_pos.y <= 2) {
+            ball_y_direction *= -1;
         }
 
+        // Lose condition
         if (ball_pos.x <= 0 || ball_pos.x >= SCREEN_WIDTH) {
 
         }
 
         // Move the balls x position based on direction variable
         ball_pos.x += ball_x_direction;
+        ball_pos.y += ball_y_direction;
 
         // Unlock the texture and render it
         SDL_UnlockTexture(texture);
@@ -155,6 +174,13 @@ int Get_Direction_Input() {
     if (key_states[SDL_SCANCODE_S]) {
         direction += 1;
     }
+
+    return direction;
+}
+
+int Get_Ball_Y_Direction(struct ball_position ball_pos, struct paddle paddle) {
+
+    int direction = 0;
 
     return direction;
 }
