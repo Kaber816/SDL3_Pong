@@ -78,7 +78,7 @@ int main() {
 
         // --- PADDLE LOGIC
         paddle_player.center_position += Get_Direction_Input(); // Get Input direction to move paddle, if any
-                                                    
+        paddle_ai.center_position += Get_AI_Input(ball_pos, &paddle_ai);                                        
         // Paddle bounding
         if (paddle_player.center_position - (PADDLE_HEIGHT / 2) < 5) {
             paddle_player.center_position = PADDLE_HEIGHT / 2 + 5; // move to 5px away from top
@@ -87,6 +87,15 @@ int main() {
         if (paddle_player.center_position > (SCREEN_HEIGHT - (PADDLE_HEIGHT / 2)) - 5) {
             paddle_player.center_position = SCREEN_HEIGHT - (PADDLE_HEIGHT / 2) - 5;
         }
+
+        if (paddle_ai.center_position - (PADDLE_HEIGHT / 2) < 5) {
+            paddle_ai.center_position = PADDLE_HEIGHT / 2 + 5; // move to 5px away from top
+        }
+
+        if (paddle_ai.center_position > (SCREEN_HEIGHT - (PADDLE_HEIGHT / 2)) - 5) {
+            paddle_ai.center_position = SCREEN_HEIGHT - (PADDLE_HEIGHT / 2) - 5;
+        }
+
 
         // Update new paddle positions
         // PLAYER 1
@@ -168,19 +177,12 @@ int Get_Direction_Input() {
     int direction = 0;
 
     if (key_states[SDL_SCANCODE_W]) {
-        direction += -1;
+        direction = -1;
     }
 
     if (key_states[SDL_SCANCODE_S]) {
-        direction += 1;
+        direction = 1;
     }
-
-    return direction;
-}
-
-int Get_Ball_Y_Direction(struct ball_position ball_pos, struct paddle paddle) {
-
-    int direction = 0;
 
     return direction;
 }
@@ -189,8 +191,12 @@ int Get_AI_Input(struct ball_position ball_pos, struct paddle *paddle_ai) {
     
     int direction = 0;
 
-    if (ball_pos.y < (paddle_ai->center_position - PADDLE_HEIGHT)) {
+    if (ball_pos.y < (paddle_ai->center_position - (PADDLE_HEIGHT / 2))) {
+        direction = -1;
+    }
 
+    if (ball_pos.y > (paddle_ai->center_position + (PADDLE_HEIGHT / 2))) {
+        direction = 1;
     }
 
     return direction;
