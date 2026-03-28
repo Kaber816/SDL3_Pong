@@ -28,6 +28,9 @@ const int PADDLE_HEIGHT = 100;
 const int PADDLE_WIDTH = 20;
 const int PADDLE_WALL_OFFSET = 20;
 
+// BALL Variables
+const int BALL_Radius = 7;
+
 int Get_Direction_Input();
 int Get_Ball_Y_Direction(struct ball_position ball_pos, struct paddle paddle);
 int Get_AI_Input(struct ball_position ball_pos, struct paddle *paddle_ai);
@@ -113,11 +116,9 @@ int main() {
         }
 
         // --- BALL LOGIC
-        for (int row = ball_pos.y - 7; row < ball_pos.y + 7; row++) {
-            for (int col = ball_pos.x - 7; col < ball_pos.x + 7; col++) {
-                
+        for (int row = ball_pos.y - BALL_Radius; row < ball_pos.y + BALL_Radius; row++) {
+            for (int col = ball_pos.x - BALL_Radius; col < ball_pos.x + BALL_Radius; col++) {
                 pixels[col + (row * (pitch / 4))] = 0xFFFFFFFF;
-                
             }
         }
  
@@ -132,7 +133,6 @@ int main() {
                 ball_y_direction = 0;
             }
 
-
             ball_x_direction = 1;
         }
 
@@ -142,7 +142,7 @@ int main() {
         }
         
         // Ball bounce off top and bottom of screen
-        if (ball_pos.y >= SCREEN_HEIGHT - 2 || ball_pos.y <= 2) {
+        if (ball_pos.y >= SCREEN_HEIGHT - BALL_Radius || ball_pos.y <= BALL_Radius) {
             ball_y_direction *= -1;
         }
 
@@ -191,11 +191,11 @@ int Get_AI_Input(struct ball_position ball_pos, struct paddle *paddle_ai) {
     
     int direction = 0;
 
-    if (ball_pos.y < (paddle_ai->center_position - (PADDLE_HEIGHT / 2))) {
+    if (ball_pos.y < paddle_ai->center_position) {
         direction = -1;
     }
 
-    if (ball_pos.y > (paddle_ai->center_position + (PADDLE_HEIGHT / 2))) {
+    if (ball_pos.y > paddle_ai->center_position) {
         direction = 1;
     }
 
