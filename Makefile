@@ -1,5 +1,5 @@
-program: renderer.c
-	gcc renderer.c -o renderer `pkg-config --cflags --libs sdl3` 
+program: pong.c
+	gcc pong.c -o pong `pkg-config --cflags --libs sdl3` 
 
 clean:
-	rm -f renderer 
+	rm -f pong 
